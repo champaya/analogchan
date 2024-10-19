@@ -1,0 +1,232 @@
+/* レトロフォントを使用 */
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+body,
+html {
+  font-family: "Press Start 2P", cursive;
+  background-color: #1a1a1a;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh; /* コンテンツが少ない場合でもfooterを下に固定 */
+  position: relative;
+  font-size: 12px; /* フォントサイズを小さくしてピクセル感を出す */
+}
+
+header {
+  text-align: center;
+  padding: 20px 0;
+  background-color: #4b0082;
+  margin-bottom: 20px;
+}
+
+header h1 {
+  color: #fff;
+  font-size: 24px;
+}
+
+.container {
+  width: 90%;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #292929;
+  border-radius: 10px;
+  border: 2px solid #4b0082;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+  font-size: 18px;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label,
+.form-group select {
+  display: block;
+  margin: 0 auto 10px auto;
+  width: 100%;
+  text-align: center;
+}
+
+.form-group select {
+  background-color: #1a1a1a;
+  color: #fff;
+  border: 2px solid #4b0082;
+  padding: 10px;
+  font-size: 14px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: block;
+}
+
+button {
+  background-color: #4b0082;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #682cbf;
+}
+
+/* レトロ風の画像リスト */
+.image-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.image-item {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.image-item img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border: 4px solid transparent;
+  transition: border-color 0.3s ease;
+  image-rendering: pixelated;
+}
+
+.image-item input {
+  display: none;
+}
+
+.image-item:hover img,
+.image-item input:checked + img {
+  border-color: green;
+}
+
+.image-item a {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: #ff0000;
+  font-size: 12px;
+  text-decoration: none;
+  border: 1px solid #ff0000;
+  padding: 5px;
+  background-color: #1a1a1a;
+  border-radius: 3px;
+}
+
+.image-item a:hover {
+  background-color: #ff0000;
+  color: #fff;
+}
+
+/* 結果表示エリア */
+#result-container {
+  margin-bottom: 80px;
+  padding: 20px;
+  background-color: #333;
+  border: 2px solid #4b0082;
+  border-radius: 10px;
+}
+
+#result-output {
+  white-space: pre;
+  overflow-x: overlay;
+}
+
+/* フッターを固定 */
+footer {
+  background-color: #4b0082;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+/* コンテンツがフッターに隠れないようにマージンを調整 */
+.container {
+  padding-bottom: 60px; /* フッターの高さを考慮して余白を追加 */
+}
+
+/* フォーム内の文字選択フィールドを横並びにする */
+.char-select-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.char-select-group label {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.char-select-group input {
+  flex: 1;
+  max-width: 60px;
+  margin-right: 10px;
+  background-color: #1a1a1a;
+  border: 2px solid #4b0082;
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px #682cbf;
+  font-family: "Press Start 2P", cursive;
+}
+
+/* アップロードフォームのスタイル */
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  margin: 0 0 0 auto;
+  padding: 10px;
+  border: 2px solid #4b0082;
+  background-color: #1a1a1a;
+  border-radius: 10px;
+  width: 30%;
+}
+
+.upload-form input {
+  margin-left: 10%;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+select {
+  width: 100%;
+  padding: 5px;
+  font-size: 10px;
+  background-color: #1a1a1a;
+  color: #fff;
+  border: 2px solid #4b0082;
+  cursor: pointer;
+  appearance: none;
+}
+
+select:focus {
+  outline: none;
+  border-color: #682cbf;
+}

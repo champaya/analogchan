@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Analog chan</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Analog chan</h1>
+    </header>
+    <div class="container">
+      <h2>アナログ化したい画像を選んでください</h2>
+
+      <!-- 画像一覧表示 -->
+      <div class="image-list">
+        {% for image in images %}
+        <label class="image-item">
+          <input type="radio" name="selected_image" value="{{ image }}" />
+          <img
+            src="{{ MEDIA_URL }}/media/images/{{ image }}"
+            alt="{{ image }}"
+          />
+          <a href="{% url 'delete_image' image %}">削除</a>
+        </label>
+        {% endfor %}
+      </div>
+
+      <!-- 文字選択フォームを追加 -->
+      <form id="image-form" method="post">
+        {% csrf_token %}
+
+        <!-- 解像度選択 -->
+        <div class="form-group">
+          <label for="resolution"
+            ><b style="font-size: 22px; padding-right: 4px">解像度を選択：</b
+            >圧縮するほど粗く表示されます</label
+          >
+          <select name="resolution" id="resolution" required>
+            <option value="original">オリジナル</option>
+            <option value="few">少し圧縮</option>
+            <option value="half">半分に圧縮</option>
+            <option value="quarter">もっと圧縮</option>
+            <option value="octant">ずっと圧縮</option>
+          </select>
+        </div>
+
+        <!-- 閾値選択 -->
+        <div class="form-group">
+          <label for="threshold"
+            ><b style="font-size: 22px; padding-right: 4px">閾値を選択：</b
+            >高いほど、暗い部分が多く表示されます</label
+          >
+          <select name="threshold" id="threshold" required>
+            <option value="very_high">超高</option>
+            <option value="high">高</option>
+            <option value="medium" selected>中</option>
+            <option value="low">低</option>
+            <option value="very_low">超低</option>
+          </select>
+        </div>
+
+        <!-- 結果エリアの色を選択 -->
+        <div class="form-group">
+          <label for="result-color"
+            ><b style="font-size: 22px">表示色を選択：</b
+            >色を変更できます</label
+          >
+          <select name="result-color" id="result-color">
+            <option value="#ffffff">白</option>
+            <option value="#000000">黒</option>
+            <option value="#00ff00">緑</option>
+            <option value="#800080">紫</option>
+            <option value="#ffa500">オレンジ</option>
+          </select>
+        </div>
+
+        <!-- 表示文字の選択 -->
+        <div class="form-group char-select-group">
+          <label for="char1"><b style="font-size: 22px">明るい部分：</b></label>
+          <input
+            type="text"
+            name="char1"
+            id="char1"
+            value="."
+            maxlength="1"
+            required
+          />
+
+          <label for="char2"
+            ><b style="font-size: 22px">少し明るい部分：</b></label
+          >
+          <input
+            type="text"
+            name="char2"
+            id="char2"
+            value="+"
+            maxlength="1"
+            required
+          />
+
+          <label for="char3"
+            ><b style="font-size: 22px">少し暗い部分：</b></label
+          >
+          <input
+            type="text"
+            name="char3"
+            id="char3"
+            value="*"
+            maxlength="1"
+            required
+          />
+
+          <label for="char4"><b style="font-size: 22px">暗い部分：</b></label>
+          <input
+            type="text"
+            name="char4"
+            id="char4"
+            value="0"
+            maxlength="1"
+            required
+          />
+        </div>
+
+        <button type="submit">実行</button>
+      </form>
+
+      <!-- 画像アップロードフォーム -->
+      <form
+        action="{% url 'upload_image' %}"
+        method="post"
+        enctype="multipart/form-data"
+        class="upload-form"
+      >
+        {% csrf_token %} {{ form.as_p }}
+        <button type="submit">画像をアップロード</button>
+      </form>
+    </div>
+
+    <!-- 結果表示エリア -->
+    <div class="container" id="result-container" style="display: none">
+      <h2>Analog Result</h2>
+      <div id="result-output"></div>
+    </div>
+
+    <footer>
+      <p>&copy; 2024 Analog chan. All rights reserved.</p>
+    </footer>
+
+    <script>
+      // Ajaxフォーム送信
+      $("#image-form").on("submit", function (event) {
+        event.preventDefault(); // ページ遷移を防止
+
+        var formData = $(this).serialize(); // フォームデータのシリアライズ
+
+        // 追加: 選択された画像の値を取得
+        var selectedImage = $("input[name='selected_image']:checked").val();
+
+        // 選択した画像のデータをformDataに追加
+        formData += "&selected_image=" + selectedImage;
+
+        $.ajax({
+          url: "{% url 'process_image' %}", // DjangoのURLにリクエストを送る
+          type: "POST",
+          data: formData,
+          success: function (response) {
+            // フォントサイズを調整
+            if (response.one_line_count >= 400) {
+              $("#result-output").css("font-size", "2px");
+            } else if (response.one_line_count >= 200) {
+              $("#result-output").css("font-size", "4px");
+            } else {
+              $("#result-output").css("font-size", "6px");
+            }
+
+            // 選択された色を取得して結果エリアの色を変更
+            var selectedColor = $("#result-color").val();
+            $("#result-output").css("color", selectedColor);
+
+            // 結果を表示する
+            $("#result-output").text(response.output);
+            $("#result-container").show(); // 結果エリアを表示
+          },
+          error: function () {
+            alert("エラーが発生しました。再試行してください。");
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
