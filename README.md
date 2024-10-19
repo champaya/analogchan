@@ -42,7 +42,7 @@ GitHubからソースコードをダウンロードしてください。
 下記のコマンドを実行してください。
 
 ```bash
-git clone https://github.com/your-username/analogchan.git
+git clone https://github.com/champaya/analogchan.git
 ```
 
 もしくは、zipファイルをダウンロードしてください。
